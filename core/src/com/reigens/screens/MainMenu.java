@@ -7,7 +7,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,10 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.reigens.MasterWarrior;
 import com.reigens.tween.ActorAssessor;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 /**
  * Created by Rich on 8/8/2014.
@@ -28,11 +29,10 @@ import com.reigens.tween.ActorAssessor;
 public class MainMenu implements Screen
 {
     private Stage stage;
-    private TextureAtlas atlas;
     private Skin skin;
     private Table table;
-    private TextButton buttonPlay, buttonExit;
-  //  private BitmapFont blue, black, white;
+    private TextButton buttonPlay, buttonSettings, buttonExit;
+    //  private BitmapFont blue, black, white;
     private Label heading;
     private TweenManager tweenManager;
 
@@ -43,21 +43,20 @@ public class MainMenu implements Screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        tweenManager.update(delta);
 
         stage.act(delta);
         stage.draw();
 
+
+        tweenManager.update(delta);
         //Table.drawDebug(stage);
     }
 
-    @Override
-    public void resize(int width, int height)
-    {
-        stage.getViewport().update(width, height, true);
-        table.invalidateHierarchy();
-        table.setSize(width, height);
 
+    @Override
+    public void resize(int width, int height) {
+     //   stage.setViewport(width, height, false);
+      //  table.invalidateHierarchy();
     }
 
     @Override
@@ -67,48 +66,63 @@ public class MainMenu implements Screen
 
         Gdx.input.setInputProcessor(stage);
 
-        atlas = new TextureAtlas("ui/atlas.pack");
-        skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), atlas);
+
+        skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), new TextureAtlas("ui/atlas.pack"));
 
         table = new Table(skin);
-        table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+      table.setFillParent(true);
 
 
         heading = new Label(MasterWarrior.TITLE, skin);
         heading.setFontScale(1.5f);
 
 
-        buttonPlay = new TextButton("Play", skin);
-        buttonPlay.addListener(new ClickListener()
-        {
+        buttonPlay = new TextButton("PLAY", skin, "big");
+        buttonPlay.addListener(new ClickListener() {
+
             @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new Levels());
+            public void clicked(InputEvent event, float x, float y) {
+                stage.addAction(sequence(moveTo(0, -stage.getHeight(), .5f), run(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new Levels());
+                    }
+                })));
             }
         });
         buttonPlay.pad(15);
 
+        buttonSettings = new TextButton("Settings", skin, "small");
+        buttonSettings.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new SettingsScreen());
+            }
+        });
+        buttonSettings.pad(15);
+
 
         buttonExit = new TextButton("Exit", skin, "small");
-        buttonExit.addListener(new ClickListener(){
+        buttonExit.addListener(new ClickListener()
+        {
             @Override
-        public void clicked(InputEvent event, float x, float y)
-            {Gdx.app.exit();
+            public void clicked(InputEvent event, float x, float y)
+            {
+                Gdx.app.exit();
             }
         });
         buttonExit.pad(15);
 
-        //Add to table
-        table.add(heading);
-        table.getCell(heading).spaceBottom(200);
-        table.row();
-        table.add(buttonPlay);
-        table.getCell(buttonPlay).spaceBottom(50);
-        table.row();
+        table.add(heading).spaceBottom(100).row();
+        table.add(buttonPlay).spaceBottom(15).row();
+        table.add(buttonSettings).spaceBottom(15).row();
         table.add(buttonExit);
-        // table.debug();//remove later
+
         stage.addActor(table);
+
 
         //Creating animations for menu
         tweenManager = new TweenManager();
@@ -128,28 +142,35 @@ public class MainMenu implements Screen
         //Heading and Buttons Fade in
         Timeline.createSequence().beginSequence()
                 .push(Tween.set(buttonPlay, ActorAssessor.ALPHA).target(0))
+                .push(Tween.set(buttonSettings, ActorAssessor.ALPHA).target(0))
                 .push(Tween.set(buttonExit, ActorAssessor.ALPHA).target(0))
-                .push(Tween.from(heading, ActorAssessor.ALPHA, 1f).target(0))
+                .push(Tween.from(heading, ActorAssessor.ALPHA, .5f).target(0))
                 .push(Tween.to(buttonPlay, ActorAssessor.ALPHA, .5f).target(1))
+                .push(Tween.to(buttonSettings, ActorAssessor.ALPHA, .5f).target(1))
                 .push(Tween.to(buttonExit, ActorAssessor.ALPHA, .5f).target(1))
                 .end().start(tweenManager);
 
         //Table fade in
         Tween.from(table, ActorAssessor.ALPHA, .5f).target(0).start(tweenManager);
-        Tween.from(table, ActorAssessor.Y, 2f).target(Gdx.graphics.getHeight() / 16).start(tweenManager);
+        Tween.from(table, ActorAssessor.Y, .5f).target(Gdx.graphics.getHeight() / 8).start(tweenManager);
 
 
     }
 
+
+
     @Override
     public void hide()
     {
+
+        dispose();
 
     }
 
     @Override
     public void pause()
     {
+
 
     }
 
@@ -163,9 +184,8 @@ public class MainMenu implements Screen
     public void dispose()
     {
         stage.dispose();
-        atlas.dispose();
-        skin.dispose();
 
+        skin.dispose();
 
 
     }

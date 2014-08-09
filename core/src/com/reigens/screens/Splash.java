@@ -47,15 +47,15 @@ public class Splash implements Screen
     public void show()
     {
         batch = new SpriteBatch();
-        tweenManager = new TweenManager();
+
         Tween.registerAccessor(Sprite.class, new SpriteAccessor());
 
         Texture splashTexture = new Texture("background.png");
         splash = new Sprite(splashTexture);
         splash.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+        tweenManager = new TweenManager();
         Tween.set(splash, SpriteAccessor.ALPHA).target(0).start(tweenManager);
-        Tween.to(splash, SpriteAccessor.ALPHA, 2).target(1).repeatYoyo(1, 0.5f).setCallback(new TweenCallback()
+        Tween.to(splash, SpriteAccessor.ALPHA, 1).target(1).repeatYoyo(1, 0.5f).setCallback(new TweenCallback()
 
         {
             @Override
@@ -70,13 +70,13 @@ public class Splash implements Screen
     @Override
     public void hide()
     {
-
+        dispose();
     }
 
     @Override
     public void pause()
     {
-
+        tweenManager.pause();
     }
 
     @Override
