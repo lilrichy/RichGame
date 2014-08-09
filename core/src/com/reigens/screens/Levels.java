@@ -1,4 +1,8 @@
-package com.reigens.screens;
+package com.reigens.screens;;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -7,114 +11,107 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-
-/**
- * Created by Rich on 8/8/2014.
- */
-public class Levels implements Screen
-{
+public class Levels implements Screen {
 
     private Stage stage;
     private Table table;
-    private TextureAtlas atlas;
     private Skin skin;
-    private List list;
-    private ScrollPane scrollPane;
-    private TextButton playButton, backButton;
 
     @Override
-    public void render(float delta)
-    {
+    public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act(delta);
         stage.draw();
-
-     //   Table.drawDebug(stage);
     }
 
     @Override
-    public void resize(int width, int height)
-    {
-
+    public void resize(int width, int height) {
+     //   stage.setViewport(width, height, false);
+    //    table.invalidateHierarchy();
     }
 
     @Override
-    public void show()
-    {
+    public void show() {
         stage = new Stage();
 
         Gdx.input.setInputProcessor(stage);
 
-        atlas = new TextureAtlas("ui/atlas.pack");
-        skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), atlas);
+        skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), new TextureAtlas("ui/atlas.pack"));
 
         table = new Table(skin);
-        table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        table.debug();
+        table.setFillParent(true);
 
-
-        list = new List(skin);
+        List list = new List(skin);
         list.setItems(new String[]{"one", "two", "three"});
+        ScrollPane scrollPane = new ScrollPane(list, skin);
 
-        scrollPane = new ScrollPane(list, skin);
+        TextButton play = new TextButton("PLAY", skin, "big");
+        play.addListener(new ClickListener() {
 
-        playButton = new TextButton("Play", skin);
-        playButton.pad(15);
-
-        backButton = new TextButton("Back", skin, "small");
-        backButton.addListener(new ClickListener(){
             @Override
-        public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+            public void clicked(InputEvent event, float x, float y) {
+              //  ((Game) Gdx.app.getApplicationListener()).setScreen(new Play());
+            }
+
+        });
+        play.pad(15);
+
+        TextButton back = new TextButton("BACK", skin);
+        back.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                stage.addAction(sequence(moveTo(0, stage.getHeight(), .5f), run(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+                    }
+
+                })));
             }
         });
-        backButton.pad(10);
+        back.pad(10);
 
-        table.add().width(table.getWidth() / 3);
-        table.add("Select Level").width(table.getWidth() / 3);
-        table.add().width(table.getWidth() / 3).row();
-        table.add(scrollPane).left().expandY();
-        table.add(playButton);
-        table.add(backButton).bottom().right();
-
+        table.add(new Label("SELECT LEVEL", skin, "big")).colspan(3).expandX().spaceBottom(50).row();
+        table.add(scrollPane).uniformX().expandY().top().left();
+        table.add(play).uniformX();
+        table.add(back).uniformX().bottom().right();
 
         stage.addActor(table);
 
+        stage.addAction(sequence(moveTo(0, stage.getHeight()), moveTo(0, 0, .5f))); // coming in from top animation
+    }
+
+    @Override
+    public void hide() {
+        dispose();
+    }
+
+    @Override
+    public void pause() {
 
     }
 
     @Override
-    public void hide()
-    {
+    public void resume() {
 
     }
 
     @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void dispose()
-    {
+    public void dispose() {
         stage.dispose();
-        atlas.dispose();
         skin.dispose();
-
-
-
     }
+
 }

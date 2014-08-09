@@ -6,12 +6,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.reigens.MasterWarrior;
+
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 /**
@@ -21,7 +21,9 @@ public class SettingsScreen implements Screen
 {
     private Stage stage;
     private Table table;
+
     private Skin skin;
+
 
     public static FileHandle levelDirectory()
     {
@@ -40,12 +42,14 @@ public class SettingsScreen implements Screen
     @Override
     public void render(float delta)
     {
-        delta = MathUtils.clamp(delta, 0, 1 / 30f);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act(delta);
         stage.draw();
+
+        //Table.drawDebug(stage);
+
     }
 
     @Override
@@ -53,6 +57,7 @@ public class SettingsScreen implements Screen
     {
         stage.getViewport().update(width, height, true);
         table.invalidateHierarchy();
+
     }
 
     @Override
@@ -62,21 +67,20 @@ public class SettingsScreen implements Screen
 
         Gdx.input.setInputProcessor(stage);
 
+
         skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), new TextureAtlas("ui/atlas.pack"));
 
         table = new Table(skin);
         table.setFillParent(true);
         //table.debug();
 
-        //vSync CheckBox
         final CheckBox vSyncCheckBox = new CheckBox("vSync", skin);
         vSyncCheckBox.setChecked(vSync());
 
-        //Level Directory input field
         final TextField levelDirectoryInput = new TextField(levelDirectory().path(), skin);
         levelDirectoryInput.setMessageText("level directory");
 
-        //Back Button
+        //buttons
         final TextButton back = new TextButton("BACK", skin);
         back.pad(10);
 
@@ -123,11 +127,12 @@ public class SettingsScreen implements Screen
         };
 
 
+        // CheckBox
         vSyncCheckBox.addListener(buttonHandler);
 
         back.addListener(buttonHandler);
 
-        // Setup Table
+        // putting everything in the table
         table.add(new Label("SETTINGS", skin, "big")).spaceBottom(50).colspan(3).expandX().row();
         table.add();
         table.add("level directory");
@@ -140,6 +145,7 @@ public class SettingsScreen implements Screen
 
         stage.addAction(sequence(moveTo(0, stage.getHeight()), moveTo(0, 0, .5f))); // coming in from top animation
     }
+
 
     @Override
     public void hide()
@@ -163,6 +169,7 @@ public class SettingsScreen implements Screen
     public void dispose()
     {
         stage.dispose();
+
         skin.dispose();
     }
 }
