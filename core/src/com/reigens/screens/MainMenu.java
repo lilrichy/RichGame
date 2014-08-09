@@ -6,14 +6,12 @@ import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -34,10 +32,9 @@ public class MainMenu implements Screen
     private Skin skin;
     private Table table;
     private TextButton buttonPlay, buttonExit;
-    private BitmapFont blue, black, white;
+  //  private BitmapFont blue, black, white;
     private Label heading;
     private TweenManager tweenManager;
-
 
 
     @Override
@@ -64,58 +61,59 @@ public class MainMenu implements Screen
     }
 
     @Override
-    public void show(){
+    public void show()
+    {
         stage = new Stage(new ScreenViewport());
 
         Gdx.input.setInputProcessor(stage);
 
         atlas = new TextureAtlas("ui/button.pack");
-        skin = new Skin(atlas);
+        skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), atlas);
 
         table = new Table(skin);
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+/*
 
         blue = new BitmapFont(Gdx.files.internal("font/blue.fnt"), false);
         black = new BitmapFont(Gdx.files.internal("font/black.fnt"), false);
         white = new BitmapFont(Gdx.files.internal("font/white.fnt"), false);
+*/
 
-        //Creating buttons
+       /* //Creating buttons
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.up = skin.getDrawable("button.up");
         textButtonStyle.down = skin.getDrawable("button.down");
         textButtonStyle.pressedOffsetX = 1;
         textButtonStyle.pressedOffsetY = -1;
-        textButtonStyle.font = black;
-
-
-        buttonExit = new TextButton("Exit", textButtonStyle);
-        buttonExit.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                Gdx.app.exit();
-            }
-        });
-        buttonExit.pad(15);
-
-
-        buttonPlay = new TextButton("Play", textButtonStyle);
-        buttonPlay.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new Levels());
-            }
-        });
-        buttonExit.pad(15);
-
-
+        textButtonStyle.font = black;*/
 
         //Creating Heading
-        Label.LabelStyle headingStyle = new Label.LabelStyle(white, Color.WHITE);
+        //  Label.LabelStyle headingStyle = new Label.LabelStyle(white, Color.WHITE);
 
-        heading = new Label(MasterWarrior.TITLE, headingStyle);
+        heading = new Label(MasterWarrior.TITLE, skin);
         heading.setFontScale(1.5f);
+
+
+        buttonPlay = new TextButton("Play", skin);
+        buttonPlay.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new Levels());
+            }
+        });
+        buttonPlay.pad(15);
+
+
+        buttonExit = new TextButton("Exit", skin);
+        buttonExit.addListener(new ClickListener(){
+            @Override
+        public void clicked(InputEvent event, float x, float y)
+            {Gdx.app.exit();
+            }
+        });
+        buttonExit.pad(15);
 
         //Add to table
         table.add(heading);
@@ -125,7 +123,7 @@ public class MainMenu implements Screen
         table.getCell(buttonPlay).spaceBottom(50);
         table.row();
         table.add(buttonExit);
-       // table.debug();//remove later
+        // table.debug();//remove later
         stage.addActor(table);
 
         //Creating animations for menu
@@ -134,13 +132,13 @@ public class MainMenu implements Screen
 
         //Heading Color Animation
         Timeline.createSequence().beginSequence()
-                .push(Tween.to(heading,ActorAssessor.RGB, .5f).target(0, 0, 1))
-                .push(Tween.to(heading,ActorAssessor.RGB, .5f).target(0, 1, 0))
-                .push(Tween.to(heading,ActorAssessor.RGB, .5f).target(1, 0, 0))
-                .push(Tween.to(heading,ActorAssessor.RGB, .5f).target(1, 1, 0))
-                .push(Tween.to(heading,ActorAssessor.RGB, .5f).target(0, 1, 1))
-                .push(Tween.to(heading,ActorAssessor.RGB, .5f).target(1, 0, 1))
-                .push(Tween.to(heading,ActorAssessor.RGB, .5f).target(1, 1, 1))
+                .push(Tween.to(heading, ActorAssessor.RGB, .5f).target(0, 0, 1))
+                .push(Tween.to(heading, ActorAssessor.RGB, .5f).target(0, 1, 0))
+                .push(Tween.to(heading, ActorAssessor.RGB, .5f).target(1, 0, 0))
+                .push(Tween.to(heading, ActorAssessor.RGB, .5f).target(1, 1, 0))
+                .push(Tween.to(heading, ActorAssessor.RGB, .5f).target(0, 1, 1))
+                .push(Tween.to(heading, ActorAssessor.RGB, .5f).target(1, 0, 1))
+                .push(Tween.to(heading, ActorAssessor.RGB, .5f).target(1, 1, 1))
                 .end().repeat(Tween.INFINITY, 0).start(tweenManager);
 
         //Heading and Buttons Fade in
@@ -155,7 +153,6 @@ public class MainMenu implements Screen
         //Table fade in
         Tween.from(table, ActorAssessor.ALPHA, .5f).target(0).start(tweenManager);
         Tween.from(table, ActorAssessor.Y, 2f).target(Gdx.graphics.getHeight() / 4).start(tweenManager);
-
 
 
     }
@@ -184,9 +181,9 @@ public class MainMenu implements Screen
         stage.dispose();
         atlas.dispose();
         skin.dispose();
-        blue.dispose();
-        black.dispose();
-        white.dispose();
+        // blue.dispose();
+        //    black.dispose();
+        // white.dispose();
 
 
     }
