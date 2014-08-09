@@ -9,8 +9,7 @@ public class MasterWarrior extends Game
 {
     public static final String TITLE = "Master Warrior";
     public static final String VERSION = "0.0.0.2";
-    SpriteBatch batch;
-	Texture img;
+
 	
 	@Override
 	public void create () {
