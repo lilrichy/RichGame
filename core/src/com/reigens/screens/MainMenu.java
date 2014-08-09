@@ -67,28 +67,12 @@ public class MainMenu implements Screen
 
         Gdx.input.setInputProcessor(stage);
 
-        atlas = new TextureAtlas("ui/button.pack");
+        atlas = new TextureAtlas("ui/atlas.pack");
         skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), atlas);
 
         table = new Table(skin);
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-/*
 
-        blue = new BitmapFont(Gdx.files.internal("font/blue.fnt"), false);
-        black = new BitmapFont(Gdx.files.internal("font/black.fnt"), false);
-        white = new BitmapFont(Gdx.files.internal("font/white.fnt"), false);
-*/
-
-       /* //Creating buttons
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.getDrawable("button.up");
-        textButtonStyle.down = skin.getDrawable("button.down");
-        textButtonStyle.pressedOffsetX = 1;
-        textButtonStyle.pressedOffsetY = -1;
-        textButtonStyle.font = black;*/
-
-        //Creating Heading
-        //  Label.LabelStyle headingStyle = new Label.LabelStyle(white, Color.WHITE);
 
         heading = new Label(MasterWarrior.TITLE, skin);
         heading.setFontScale(1.5f);
@@ -106,7 +90,7 @@ public class MainMenu implements Screen
         buttonPlay.pad(15);
 
 
-        buttonExit = new TextButton("Exit", skin);
+        buttonExit = new TextButton("Exit", skin, "small");
         buttonExit.addListener(new ClickListener(){
             @Override
         public void clicked(InputEvent event, float x, float y)
@@ -145,14 +129,14 @@ public class MainMenu implements Screen
         Timeline.createSequence().beginSequence()
                 .push(Tween.set(buttonPlay, ActorAssessor.ALPHA).target(0))
                 .push(Tween.set(buttonExit, ActorAssessor.ALPHA).target(0))
-                .push(Tween.from(heading, ActorAssessor.ALPHA, .25f).target(0))
-                .push(Tween.to(buttonPlay, ActorAssessor.ALPHA, 2f).target(1))
-                .push(Tween.to(buttonExit, ActorAssessor.ALPHA, 2.5f).target(1))
+                .push(Tween.from(heading, ActorAssessor.ALPHA, 1f).target(0))
+                .push(Tween.to(buttonPlay, ActorAssessor.ALPHA, .5f).target(1))
+                .push(Tween.to(buttonExit, ActorAssessor.ALPHA, .5f).target(1))
                 .end().start(tweenManager);
 
         //Table fade in
         Tween.from(table, ActorAssessor.ALPHA, .5f).target(0).start(tweenManager);
-        Tween.from(table, ActorAssessor.Y, 2f).target(Gdx.graphics.getHeight() / 4).start(tweenManager);
+        Tween.from(table, ActorAssessor.Y, 2f).target(Gdx.graphics.getHeight() / 16).start(tweenManager);
 
 
     }
@@ -181,9 +165,7 @@ public class MainMenu implements Screen
         stage.dispose();
         atlas.dispose();
         skin.dispose();
-        // blue.dispose();
-        //    black.dispose();
-        // white.dispose();
+
 
 
     }
