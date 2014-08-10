@@ -1,8 +1,4 @@
-package com.reigens.screens;;
-
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
+package com.reigens.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -12,23 +8,19 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
-public class Levels implements Screen {
-
+public class Levels implements Screen
+{
     private Stage stage;
     private Table table;
     private Skin skin;
 
     @Override
-    public void render(float delta) {
-
+    public void render(float delta)
+    {
         delta = MathUtils.clamp(delta, 0, 1 / 30f);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -38,13 +30,15 @@ public class Levels implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {
+    public void resize(int width, int height)
+    {
         stage.getViewport().update(width, height, true);
         table.invalidateHierarchy();
     }
 
     @Override
-    public void show() {
+    public void show()
+    {
         stage = new Stage();
 
         Gdx.input.setInputProcessor(stage);
@@ -58,34 +52,47 @@ public class Levels implements Screen {
         list.setItems(new String[]{"one", "two", "three"});
         ScrollPane scrollPane = new ScrollPane(list, skin);
 
-        TextButton play = new TextButton("PLAY", skin, "big");
-        play.addListener(new ClickListener() {
-
+        //Play button
+        TextButton play = new TextButton("PLAY", skin);
+        play.addListener(new ClickListener()
+        {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-              //  ((Game) Gdx.app.getApplicationListener()).setScreen(new Play());
+            public void clicked(InputEvent event, float x, float y)
+            {
+                stage.addAction(sequence(moveTo(0, stage.getHeight(), .5f), run(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+                        // change to playing game ....
+                    }
+                })));
             }
-
         });
-        play.pad(15);
+        play.pad(10);
 
+        //Back Button
         TextButton back = new TextButton("BACK", skin);
-        back.addListener(new ClickListener() {
-
+        back.addListener(new ClickListener()
+        {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                stage.addAction(sequence(moveTo(0, stage.getHeight(), .5f), run(new Runnable() {
+            public void clicked(InputEvent event, float x, float y)
+            {
+                stage.addAction(sequence(moveTo(0, stage.getHeight(), .5f), run(new Runnable()
+                {
 
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
                     }
-
                 })));
             }
         });
         back.pad(10);
 
+        //Set up Table
         table.add(new Label("SELECT LEVEL", skin, "big")).colspan(3).expandX().spaceBottom(50).row();
         table.add(scrollPane).uniformX().expandY().top().left();
         table.add(play).uniformX();
@@ -97,22 +104,26 @@ public class Levels implements Screen {
     }
 
     @Override
-    public void hide() {
+    public void hide()
+    {
         dispose();
     }
 
     @Override
-    public void pause() {
+    public void pause()
+    {
 
     }
 
     @Override
-    public void resume() {
+    public void resume()
+    {
 
     }
 
     @Override
-    public void dispose() {
+    public void dispose()
+    {
         stage.dispose();
         skin.dispose();
     }
