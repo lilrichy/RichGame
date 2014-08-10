@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.reigens.MasterWarrior;
-
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 /**
@@ -22,9 +21,7 @@ public class SettingsScreen implements Screen
 {
     private Stage stage;
     private Table table;
-
     private Skin skin;
-
 
     public static FileHandle levelDirectory()
     {
@@ -49,9 +46,6 @@ public class SettingsScreen implements Screen
 
         stage.act(delta);
         stage.draw();
-
-        //Table.drawDebug(stage);
-
     }
 
     @Override
@@ -59,7 +53,6 @@ public class SettingsScreen implements Screen
     {
         stage.getViewport().update(width, height, true);
         table.invalidateHierarchy();
-
     }
 
     @Override
@@ -69,20 +62,21 @@ public class SettingsScreen implements Screen
 
         Gdx.input.setInputProcessor(stage);
 
-
         skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), new TextureAtlas("ui/atlas.pack"));
 
         table = new Table(skin);
         table.setFillParent(true);
         //table.debug();
 
+        //vSync CheckBox
         final CheckBox vSyncCheckBox = new CheckBox("vSync", skin);
         vSyncCheckBox.setChecked(vSync());
 
+        //Level Directory input field
         final TextField levelDirectoryInput = new TextField(levelDirectory().path(), skin);
         levelDirectoryInput.setMessageText("level directory");
 
-        //buttons
+        //Back Button
         final TextButton back = new TextButton("BACK", skin);
         back.pad(10);
 
@@ -129,12 +123,11 @@ public class SettingsScreen implements Screen
         };
 
 
-        // CheckBox
         vSyncCheckBox.addListener(buttonHandler);
 
         back.addListener(buttonHandler);
 
-        // putting everything in the table
+        // Setup Table
         table.add(new Label("SETTINGS", skin, "big")).spaceBottom(50).colspan(3).expandX().row();
         table.add();
         table.add("level directory");
@@ -147,7 +140,6 @@ public class SettingsScreen implements Screen
 
         stage.addAction(sequence(moveTo(0, stage.getHeight()), moveTo(0, 0, .5f))); // coming in from top animation
     }
-
 
     @Override
     public void hide()
@@ -171,7 +163,6 @@ public class SettingsScreen implements Screen
     public void dispose()
     {
         stage.dispose();
-
         skin.dispose();
     }
 }

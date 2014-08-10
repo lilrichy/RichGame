@@ -15,6 +15,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.reigens.tween.SpriteAccessor;
 
+
+
 /**
  * Created by Rich on 8/8/2014.
  */
@@ -36,18 +38,20 @@ public class Splash implements Screen
         batch.begin();
         splash.draw(batch);
         batch.end();
-
     }
 
     @Override
     public void resize(int width, int height)
     {
-
+        splash.setSize(width, height);
     }
 
     @Override
     public void show()
     {
+        //Load Preferences
+        Gdx.graphics.setVSync(SettingsScreen.vSync());
+
         batch = new SpriteBatch();
 
         Tween.registerAccessor(Sprite.class, new SpriteAccessor());
@@ -69,7 +73,6 @@ public class Splash implements Screen
 
         tweenManager.update(Float.MIN_VALUE);
     }
-
 
     @Override
     public void hide()

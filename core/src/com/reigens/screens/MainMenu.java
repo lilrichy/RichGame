@@ -20,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.reigens.MasterWarrior;
 import com.reigens.tween.ActorAssessor;
-
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 /**
@@ -31,11 +30,7 @@ public class MainMenu implements Screen
     private Stage stage;
     private Skin skin;
     private Table table;
-    private TextButton buttonPlay, buttonSettings, buttonExit;
-    //  private BitmapFont blue, black, white;
-    private Label heading;
     private TweenManager tweenManager;
-
 
     @Override
     public void render(float delta)
@@ -44,15 +39,11 @@ public class MainMenu implements Screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
         stage.act(delta);
         stage.draw();
 
-
         tweenManager.update(delta);
-        //Table.drawDebug(stage);
     }
-
 
     @Override
     public void resize(int width, int height)
@@ -68,27 +59,23 @@ public class MainMenu implements Screen
 
         Gdx.input.setInputProcessor(stage);
 
-
         skin = new Skin(Gdx.files.internal("ui/menuSkin.json"), new TextureAtlas("ui/atlas.pack"));
 
         table = new Table(skin);
         table.setFillParent(true);
 
-
-        heading = new Label(MasterWarrior.TITLE, skin);
+        Label heading = new Label(MasterWarrior.TITLE, skin);
         heading.setFontScale(1.5f);
 
-
-        buttonPlay = new TextButton("PLAY", skin, "big");
+        //Play Button
+        TextButton buttonPlay = new TextButton("PLAY", skin, "big");
         buttonPlay.addListener(new ClickListener()
         {
-
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
                 stage.addAction(sequence(moveTo(0, -stage.getHeight(), .5f), run(new Runnable()
                 {
-
                     @Override
                     public void run()
                     {
@@ -99,10 +86,10 @@ public class MainMenu implements Screen
         });
         buttonPlay.pad(15);
 
-        buttonSettings = new TextButton("Settings", skin, "default");
+        //Settings Button
+        TextButton buttonSettings = new TextButton("Settings", skin, "default");
         buttonSettings.addListener(new ClickListener()
         {
-
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
@@ -118,8 +105,8 @@ public class MainMenu implements Screen
         });
         buttonSettings.pad(15);
 
-
-        buttonExit = new TextButton("Exit", skin, "default");
+        //Exit Button
+        TextButton buttonExit = new TextButton("Exit", skin, "default");
         buttonExit.addListener(new ClickListener()
         {
             @Override
@@ -130,13 +117,13 @@ public class MainMenu implements Screen
         });
         buttonExit.pad(15);
 
+        //Setup Table
         table.add(heading).spaceBottom(100).row();
         table.add(buttonPlay).spaceBottom(15).row();
         table.add(buttonSettings).spaceBottom(15).row();
         table.add(buttonExit);
 
         stage.addActor(table);
-
 
         //Creating animations for menu
         tweenManager = new TweenManager();
@@ -169,22 +156,17 @@ public class MainMenu implements Screen
         Tween.from(table, ActorAssessor.Y, .5f).target(Gdx.graphics.getHeight() / 8).start(tweenManager);
 
         tweenManager.update(Gdx.graphics.getDeltaTime());
-
     }
-
 
     @Override
     public void hide()
     {
-
         dispose();
-
     }
 
     @Override
     public void pause()
     {
-
 
     }
 
@@ -198,9 +180,6 @@ public class MainMenu implements Screen
     public void dispose()
     {
         stage.dispose();
-
         skin.dispose();
-
-
     }
 }
