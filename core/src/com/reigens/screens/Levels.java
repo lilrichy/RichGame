@@ -10,17 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
-public class Levels implements Screen
-{
+public class Levels implements Screen {
     private Stage stage;
     private Table table;
     private Skin skin;
 
     @Override
-    public void render(float delta)
-    {
+    public void render(float delta) {
         delta = MathUtils.clamp(delta, 0, 1 / 30f);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -30,15 +29,13 @@ public class Levels implements Screen
     }
 
     @Override
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
         table.invalidateHierarchy();
     }
 
     @Override
-    public void show()
-    {
+    public void show() {
         stage = new Stage();
 
         Gdx.input.setInputProcessor(stage);
@@ -54,18 +51,13 @@ public class Levels implements Screen
 
         //Play button
         TextButton play = new TextButton("PLAY", skin);
-        play.addListener(new ClickListener()
-        {
+        play.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                stage.addAction(sequence(moveTo(0, stage.getHeight(), .5f), run(new Runnable()
-                {
+            public void clicked(InputEvent event, float x, float y) {
+                stage.addAction(sequence(moveTo(0, stage.getHeight(), .5f), run(new Runnable() {
                     @Override
-                    public void run()
-                    {
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
-                        // change to playing game ....
+                    public void run() {
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new com.reigens.screens.play());
                     }
                 })));
             }
@@ -74,17 +66,13 @@ public class Levels implements Screen
 
         //Back Button
         TextButton back = new TextButton("BACK", skin);
-        back.addListener(new ClickListener()
-        {
+        back.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                stage.addAction(sequence(moveTo(0, stage.getHeight(), .5f), run(new Runnable()
-                {
+            public void clicked(InputEvent event, float x, float y) {
+                stage.addAction(sequence(moveTo(0, stage.getHeight(), .5f), run(new Runnable() {
 
                     @Override
-                    public void run()
-                    {
+                    public void run() {
                         ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
                     }
                 })));
@@ -104,26 +92,22 @@ public class Levels implements Screen
     }
 
     @Override
-    public void hide()
-    {
+    public void hide() {
         dispose();
     }
 
     @Override
-    public void pause()
-    {
+    public void pause() {
 
     }
 
     @Override
-    public void resume()
-    {
+    public void resume() {
 
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         stage.dispose();
         skin.dispose();
     }
