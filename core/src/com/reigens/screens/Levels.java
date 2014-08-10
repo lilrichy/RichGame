@@ -46,7 +46,7 @@ public class Levels implements Screen {
         table.setFillParent(true);
 
         final List list = new List(skin);
-        list.setItems(new String[]{"Test Game", "Video Series Game"});
+        list.setItems(new String[]{"Video Series Game", "Test Game"});
         ScrollPane scrollPane = new ScrollPane(list, skin);
 
         //Play button
