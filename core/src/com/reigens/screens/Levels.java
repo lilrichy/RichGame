@@ -45,8 +45,8 @@ public class Levels implements Screen {
         table = new Table(skin);
         table.setFillParent(true);
 
-        List list = new List(skin);
-        list.setItems(new String[]{"one", "two", "three"});
+        final List list = new List(skin);
+        list.setItems(new String[]{"Test Game", "Video Series Game"});
         ScrollPane scrollPane = new ScrollPane(list, skin);
 
         //Play button
@@ -57,7 +57,17 @@ public class Levels implements Screen {
                 stage.addAction(sequence(moveTo(0, stage.getHeight(), .5f), run(new Runnable() {
                     @Override
                     public void run() {
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new com.reigens.screens.play());
+                        switch (list.getSelectedIndex())
+                        {
+                            case 0:
+                                ((Game) Gdx.app.getApplicationListener()).setScreen(new com.reigens.screens.play());
+                                break;
+                            case 1:
+                                ((Game) Gdx.app.getApplicationListener()).setScreen(new com.reigens.screens.possiblitys.playlv1());
+                                break;
+
+
+                        }
                     }
                 })));
             }

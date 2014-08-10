@@ -1,4 +1,4 @@
-package com.reigens.screens;
+package com.reigens.screens.possiblitys;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -9,11 +9,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.reigens.controlers.InputControler;
+import com.reigens.screens.Levels;
 
 /**
  * Created by Rich on 8/10/2014.
  */
-public class play implements Screen {
+public class playlv1 implements Screen {
     private final float TIMESTEP = 1 / 60f;
     private final int VELOCITYINTERATIONS = 8, POSITIONITERATIONS = 3;
     private World world;
@@ -91,19 +92,48 @@ public class play implements Screen {
                 }
                 return true;
             }
-
-            @Override
-            public boolean scrolled(int amount) {
-                camera.zoom += amount / 25f;
-                return true;
-            }
         });
 
-
-        FixtureDef fixtureDef = new FixtureDef();
+        //Body Definition
         BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(0, 10);
+
+        //Ball Shape
+        CircleShape shape = new CircleShape();
+        shape.setRadius(.5f);
 
 
+        //Fixture Definition
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 2.5f;
+        fixtureDef.friction = .25f;
+        fixtureDef.restitution = .75f;
+
+        world.createBody(bodyDef).createFixture(fixtureDef);
+
+        shape.dispose();
+
+
+        //Ground
+        //Body Definition
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(0, 20);
+
+        //Ground Shape
+        PolygonShape groundShape = new PolygonShape();
+        groundShape.setAsBox(20, 20);
+
+
+        //Fixture Definition
+        fixtureDef.shape = groundShape;
+        fixtureDef.friction = .5f;
+        fixtureDef.restitution = 0;
+
+        world.createBody(bodyDef).createFixture(fixtureDef);
+
+        groundShape.dispose();
 
         //Box
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -124,38 +154,7 @@ public class play implements Screen {
 
         boxShape.dispose();
 
-        //Ball
-        //Ball Shape
-        CircleShape ballshape = new CircleShape();
-        ballshape.setPosition(new Vector2(0, 1.5f));
-        ballshape.setRadius(.5f);
 
-        //Fixture Definition
-        fixtureDef.shape = ballshape;
-        fixtureDef.density = 2.5f;
-        fixtureDef.friction = .25f;
-        fixtureDef.restitution = .75f;
-
-        box.createFixture(fixtureDef);
-        ballshape.dispose();
-
-        //Ground
-        //Body Definition
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(0, 0);
-
-        //Ground Shape
-        ChainShape groundShape = new ChainShape();
-        groundShape.createChain(new Vector2[]{new Vector2(-50, 0), new Vector2(50, 0)});
-
-
-        //Fixture Definition
-        fixtureDef.shape = groundShape;
-        fixtureDef.friction = .5f;
-        fixtureDef.restitution = 0;
-
-        world.createBody(bodyDef).createFixture(fixtureDef);
-        groundShape.dispose();
     }
 
     @Override
