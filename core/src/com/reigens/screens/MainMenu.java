@@ -154,6 +154,7 @@ public class MainMenu implements Screen
         Tween.from(table, ActorAssessor.ALPHA, .5f).target(0).start(tweenManager);
         Tween.from(table, ActorAssessor.Y, .5f).target(Gdx.graphics.getHeight() / 8).start(tweenManager);
 
+        tweenManager.update(Gdx.graphics.getDeltaTime());
 
     }
 

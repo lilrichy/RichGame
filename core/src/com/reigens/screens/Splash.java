@@ -64,6 +64,8 @@ public class Splash implements Screen
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
             }
         }).start(tweenManager);
+
+        tweenManager.update(Float.MIN_VALUE);
     }
 
 
